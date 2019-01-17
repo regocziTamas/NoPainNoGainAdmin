@@ -1,0 +1,30 @@
+<button mat-raised-button (click)="checkAuth()" style="margin-left: 40px; margin-right:10px; margin-bottom: 20px ">Auth Check</button>
+<button mat-raised-button (click)="addExercise()">Add Exercise</button>
+
+
+<div id="container">
+  <mat-accordion *ngFor="let ex of exercises" >
+  <mat-expansion-panel class="exAccordion">
+    <mat-expansion-panel-header >
+      {{ex.name}}
+    </mat-expansion-panel-header >
+
+  <mat-form-field class="blockInput nameInput">
+    <input matInput  value="{{ex.name}}" (input)="registerNewName($event.target.value, ex.id)">
+  </mat-form-field>
+    <mat-form-field class="blockInput targetInput">
+      <mat-select [value]="ex.target" (valueChange)="registerNewTarget($event, ex.id)">
+        <mat-option *ngFor="let target of targets" [value]="target">{{target}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="blockInput" (input)="registerNewDescription($event.target.value, ex.id)">
+      <textarea matInput value="{{ex.description}}" rows="4"></textarea>
+    </mat-form-field>
+    <mat-action-row class="exAccordion">
+      <button mat-raised-button class="accordionButton" (click)="deleteEx(ex.id)">Delete</button>
+      <button mat-raised-button style="margin-left: 10px" class="accordionButton" (click)="saveEx(ex.id)">Save</button>
+    </mat-action-row >
+
+  </mat-expansion-panel>
+  </mat-accordion>
+</div>

@@ -1,0 +1,25 @@
+#loginCard{
+  text-align: center;
+  margin-left: 25vw;
+  margin-right: 25vw;
+  margin-top: 150px;
+  background-color: #363636;
+}
+
+.blockInput{
+  display: block;
+  text-decoration-color: white;
+
+}
+
+
+
+.width{
+  min-width: 100%;
+}
+
+
+#loginButton{
+  background-color: #00B0FF;
+  color: white;
+}

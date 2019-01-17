@@ -1,0 +1,18 @@
+<div id="container">
+  <mat-card *ngFor="let b of workout.blocks">
+    <h2 style="color: white">Exercise {{b.order + 1}}</h2>
+    <div *ngFor="let ex of b.components">
+      <mat-card *ngIf="ex.hasOwnProperty('reps')" class="entry">
+        <mat-card-content >
+          {{ex.reps}} reps of {{ex.exercise.name}}
+        </mat-card-content>
+      </mat-card>
+      <mat-card *ngIf="!ex.hasOwnProperty('reps')" class="entry">
+        <mat-card-content>Duration: {{ex.durationInMilis}}</mat-card-content>
+      </mat-card>
+
+    </div>
+
+
+  </mat-card>
+</div>

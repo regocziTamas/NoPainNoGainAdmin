@@ -1,0 +1,30 @@
+.exAccordion{
+  margin-bottom: 10px;
+
+}
+
+#container{
+  margin-right: 20vw;
+  margin-left: 20vw;
+}
+
+.blockInput{
+  display: block;
+}
+
+.accordionButton{
+  background-color: #00B0FF;
+  color: white;
+}
+
+.nameInput{
+  margin-right: 40vw;
+}
+
+.targetInput{
+  margin-right: 50vw;
+}
+
+html {
+  overflow-y: scroll;
+}

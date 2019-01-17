@@ -1,0 +1,13 @@
+<mat-card id="loginCard">
+  <div class="example-container">
+    <mat-form-field class="width">
+      <input matInput class="blockInput" placeholder="User" #usr>
+    </mat-form-field>
+    <br/>
+    <mat-form-field class="width" style="color:#FFF;">
+      <input matInput class="blockInput" #pwd>
+      <mat-placeholder style="color:white">Password</mat-placeholder>
+    </mat-form-field>
+    <button mat-raised-button id="loginButton" (click)="login(usr.value,pwd.value)">Login</button>
+  </div>
+</mat-card>

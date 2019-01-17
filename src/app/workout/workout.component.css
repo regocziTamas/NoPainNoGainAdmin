@@ -1,0 +1,11 @@
+.entry{
+  max-height: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom:5px ;
+}
+
+#container{
+  padding-right: 20vw;
+  padding-left: 20vw;
+}
