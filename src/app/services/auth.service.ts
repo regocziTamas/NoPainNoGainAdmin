@@ -14,7 +14,8 @@ export class AuthService {
   }
 
   performLogin(username: String, password: String) {
-    return this.http.post(environment.baseurl + 'login',
+    console.log(environment.baseurl);
+    return this.http.post(environment.baseurl + '/login',
       {'username': username, 'password': password},
       {'headers': new HttpHeaders({'Content-Type': 'application/json'}), 'responseType': 'text', observe: 'response'});
 

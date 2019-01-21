@@ -1,11 +1,90 @@
 .entry{
-  max-height: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 0;
   margin-bottom:5px ;
+  background-color: #565656;
+  min-height: 40px;
+}
+.block{
+  margin-bottom: 15px;
 }
 
-#container{
-  padding-right: 20vw;
-  padding-left: 20vw;
+.mainButtonCont{
+  width: 100%;
+  text-align: right;
+  margin-bottom: 10px;
 }
+
+/*#workoutTitle{
+  margin-top: 3vw;
+  margin-bottom: 2vw;
+  color: white;
+}*/
+
+.cardButton{
+  background-color: #00B0FF;
+  color: white;
+  margin: 0 !important;
+  margin-left: 8px !important;
+}
+
+.mainButton{
+  background-color: #00B0FF;
+  color: white;
+  margin-left: 8px;
+}
+
+ .deleteIcon{
+   position: relative;
+   top: 7px;
+   right: 5px;
+ }
+
+ .workoutTitle{
+   color: white;
+   min-width: 100%;
+   font-size: 28px;
+ }
+
+ .mat-form-field-wrapper{
+   width: 400px !important;
+ }
+
+ .entryNameCont{
+   display: inline;
+   position: relative;
+   top: 12px;
+   left: 8px;
+ }
+
+ .iconCont{
+
+   display: inline;
+   float: right;
+ }
+
+#container{
+  padding-right: 25vw;
+  padding-left: 25vw;
+}
+
+.cdk-drag-preview {
+
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .entry:not(.cdk-drag-placeholder) {
+  transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+

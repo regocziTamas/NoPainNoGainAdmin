@@ -1,18 +1,37 @@
+
+
+
 <div id="container">
-  <mat-card *ngFor="let b of workout.blocks">
-    <h2 style="color: white">Exercise {{b.order + 1}}</h2>
-    <div *ngFor="let ex of b.components">
-      <mat-card *ngIf="ex.hasOwnProperty('reps')" class="entry">
-        <mat-card-content >
-          {{ex.reps}} reps of {{ex.exercise.name}}
+  <mat-form-field class="workoutTitle">
+    <input matInput  value="{{this.workout.title}}" (input)="registerNewName($event.target.value)">
+  </mat-form-field>
+  <div class="mainButtonCont">
+    <button class="mat-raised-button mainButton" (click)="addBlock()">Add Block</button>
+    <button class="mat-raised-button mainButton" (click)="deleteWorkout()">Delete Workout</button>
+    <button class="mat-raised-button mainButton" (click)="saveChanges()">Save</button>
+  </div>
+  <mat-card *ngFor="let b of workout.blocks" cdkDropList (cdkDropListDropped)="drop($event, b.order)" class="block">
+    <h2 style="color: white; vertical-align: center">
+      Exercise {{b.order + 1}}
+    </h2>
+    <div *ngFor="let ex of b.components" >
+      <mat-card *ngIf="ex.hasOwnProperty('reps')" class="entry" cdkDrag (click)="WExerciseEdit(b.order,ex.order)" >
+        <mat-card-content style="height: 40px; vertical-align: middle"  >
+            <div class="entryNameCont">{{ex.reps}} reps of {{ex.exercise.name}}</div>
+            <div class="iconCont"><i class="material-icons deleteIcon" (click)="deleteComponent(b.order,ex.order)" > delete </i></div>
         </mat-card-content>
       </mat-card>
-      <mat-card *ngIf="!ex.hasOwnProperty('reps')" class="entry">
-        <mat-card-content>Duration: {{ex.durationInMilis}}</mat-card-content>
+      <mat-card *ngIf="!ex.hasOwnProperty('reps')" class="entry" cdkDrag (click)="WRestEdit(b.order,ex.order)">
+        <mat-card-content class="entryNameCont">{{ex.durationInMilis/1000}} seconds of rest</mat-card-content>
+        <div class="iconCont"><i class="material-icons deleteIcon" (click)="deleteComponent(b.order,ex.order)" > delete </i></div>
       </mat-card>
-
     </div>
-
+    <mat-card-actions style="text-align: right">
+      <button mat-raised-button class="cardButton" (click)="addNewExercise(b.order)">Add Exercise</button>
+      <button mat-raised-button class="cardButton" (click)="addNewRest(b.order)">Add Rest</button>
+      <button mat-raised-button class="cardButton" (click)="deleteBlock(b.order)">Delete</button>
+    </mat-card-actions>
 
   </mat-card>
+
 </div>

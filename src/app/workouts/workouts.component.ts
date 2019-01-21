@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Router} from '@angular/router';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-workouts',
@@ -31,8 +32,15 @@ export class WorkoutsComponent implements OnInit {
 
   }
 
-  navigateToWorkout(id: number){
-    this.router.navigate(['/workout', {id: id}] );
+  navigateToWorkout(id: number) {
+    this.router.navigate(['/workout', {id: id}]);
+  }
+
+  addNewWorkout() {
+    this.http.get<{id: number}>(environment.baseurl + '/workouts/add-new').subscribe(resp => {
+      console.log(resp.id);
+      this.router.navigate(['/workout', {id: resp.id}]);
+    });
   }
 
 

@@ -28,3 +28,7 @@
 html {
   overflow-y: scroll;
 }
+
+mat-expansion-panel{
+  margin-bottom: 10px !important;
+}

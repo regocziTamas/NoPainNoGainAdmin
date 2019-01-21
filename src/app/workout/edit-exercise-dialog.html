@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Edit this exercise</h1>
+<div mat-dialog-content style="text-align: center">
+  <mat-form-field >
+    <mat-select [(value)]="data.exerciseId" >
+      <mat-option *ngFor="let ex of data.all" [value]="ex.id"  >{{ex.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="number" [(ngModel)]="data.reps" value="{{data.reps}}">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data"  cdkFocusInitial>Ok</button>
+</div>

@@ -21,8 +21,10 @@ import {MatSelectModule} from '@angular/material/select';
 import {FormsModule} from '@angular/forms';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import { WorkoutComponent } from './workout/workout.component';
-import {DragDropModule} from '@angular/cdk/';
+import {EditExerciesDialogComponent, EditRestDialogComponent, WorkoutComponent} from './workout/workout.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
 
 
 const routes: Routes = [
@@ -39,7 +41,10 @@ const routes: Routes = [
     LoginComponent,
     ExercisesComponent,
     WorkoutsComponent,
-    WorkoutComponent
+    WorkoutComponent,
+    EditExerciesDialogComponent,
+    EditRestDialogComponent
+
   ],
   imports: [
     BrowserModule,
@@ -54,9 +59,12 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     FormsModule,
     MatExpansionModule,
-    MatSnackBarModule
-
+    MatSnackBarModule,
+    DragDropModule,
+    MatDialogModule,
+    MatIconModule
   ],
+  entryComponents: [EditExerciesDialogComponent, EditRestDialogComponent],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptorService, multi: true}

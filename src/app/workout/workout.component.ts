@@ -1,21 +1,29 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {catchError, switchMap} from 'rxjs/operators';
-import {throwError} from 'rxjs';
+import {Subscription, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
 
 @Component({
   selector: 'app-workout',
   templateUrl: './workout.component.html',
-  styleUrls: ['./workout.component.css']
+  styleUrls: ['./workout.component.css'],
+  providers: []
 })
 export class WorkoutComponent implements OnInit {
 
   workout: Workout;
-  blocks: any[];
+  dialog: MatDialog;
+  exercises: Exercise[];
+  changeDetector: ChangeDetectorRef;
 
-  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient) {
+
+  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, dialog: MatDialog, changeDetector: ChangeDetectorRef) {
+    this.dialog = dialog;
+    this.changeDetector = changeDetector;
   }
 
   ngOnInit() {
@@ -32,16 +40,178 @@ export class WorkoutComponent implements OnInit {
       console.log(id);
       this.requestWorkout(id);
     });
+    this.requestExercises();
+
+  }
+
+  registerNewName(value) {
+    console.log(value);
+    this.workout.title = value;
   }
 
   requestWorkout(id: String) {
     this.http.get<Workout>(environment.baseurl + `/workouts/${id}`).subscribe(resp => {
+      if (resp === null) {
+        this.router.navigate(['/workouts']);
+      }
       this.workout = resp;
-      console.log(this.workout);
+    });
+  }
+
+  drop(event: CdkDragDrop<string[]>, id: number) {
+    moveItemInArray(this.workout.blocks[id].components, event.previousIndex, event.currentIndex);
+    this.reorderBlock(id);
+  }
+
+  private reorderBlock(order: number) {
+    for (let i = 0; i < this.workout.blocks[order].components.length; i++) {
+      this.workout.blocks[order].components[i].order = i;
+    }
+  }
+
+  private reorderWorkoutBlocks() {
+    for (let i = 0; i < this.workout.blocks.length; i++) {
+      this.workout.blocks[i].order = i;
+    }
+  }
+
+  requestExercises() {
+    this.http.get<Exercise[]>(environment.baseurl + '/exercises/all').subscribe(resp => {
+      this.exercises = resp;
+    });
+  }
+
+  private findExerciseById(id: number) {
+    for (let i = 0; i < this.exercises.length; i++) {
+      if (this.exercises[i].id === id) {
+        return this.exercises[i];
+      }
+    }
+  }
+
+  WExerciseEdit(blockOrder: number, componentOrder: number) {
+
+    let wex: WExercise;
+    wex = this.workout.blocks[blockOrder].components[componentOrder] as WExercise;
+    console.log(wex);
+
+    const dialogRef = this.dialog.open(EditExerciesDialogComponent, {
+      width: '400px',
+      data: {'exerciseName': wex.exercise.name, 'exerciseId': wex.exercise.id, 'reps': wex.reps, 'all': this.exercises}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === undefined) {
+        console.log('no changes');
+        return;
+      }
+
+      const exer: WExercise = {
+        reps: result.reps,
+        exercise: this.findExerciseById(result.exerciseId),
+        order: componentOrder,
+        type: 'WorkoutExercise'
+      };
+      this.workout.blocks[blockOrder].components[componentOrder] = exer;
+
+
+    });
+  }
+
+  WRestEdit(blockOrder: number, componentOrder: number) {
+    let rest: Rest;
+    rest = this.workout.blocks[blockOrder].components[componentOrder] as Rest;
+    const dialogRef = this.dialog.open(EditRestDialogComponent, {
+      width: '250px',
+      data: {'duration': rest.durationInMilis / 1000}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === undefined) {
+        console.log('no changes');
+        return;
+      }
+      const newRest: Rest = {type: 'Rest', order: componentOrder, durationInMilis: result.duration * 1000};
+      this.workout.blocks[blockOrder].components[componentOrder] = newRest;
+
+    });
+  }
+
+  addNewExercise(blockId: number) {
+    const newOrder = this.workout.blocks[blockId].components.length;
+    const ex: WExercise = {reps: 10, exercise: this.findExerciseById(1), type: 'WorkoutExercise', order: newOrder};
+    this.workout.blocks[blockId].components.push(ex);
+    this.WExerciseEdit(blockId, newOrder);
+  }
+
+  addNewRest(blockOrder: number) {
+    const newOrder = this.workout.blocks[blockOrder].components.length;
+    const rest: Rest = {type: 'Rest', durationInMilis: 5000, order: newOrder};
+    this.workout.blocks[blockOrder].components.push(rest);
+    this.WRestEdit(blockOrder, newOrder);
+  }
+
+  addBlock() {
+    const newOrder = this.workout.blocks.length;
+    let compList: Comp[] = [];
+    const block: Block = {order: newOrder, components: compList};
+    this.workout.blocks.push(block);
+  }
+
+  deleteBlock(blockOrder: number) {
+    this.workout.blocks.splice(blockOrder, 1);
+    this.reorderWorkoutBlocks();
+  }
+
+  deleteComponent(blockOrder: number, compOrder: number) {
+    this.workout.blocks[blockOrder].components.splice(compOrder, 1);
+    this.reorderBlock(blockOrder);
+  }
+
+  saveChanges() {
+    this.http.post(environment.baseurl + `/workouts/${this.workout.id}`, this.workout).subscribe(resp => {
+      console.log(resp);
+    });
+  }
+
+  deleteWorkout() {
+    this.http.delete(environment.baseurl + `/workouts/${this.workout.id}`).subscribe(resp => {
+      this.router.navigate(['/workouts']);
     });
   }
 
 
+}
+
+@Component({
+  selector: 'app-edit-exercise-dialog',
+  templateUrl: 'edit-exercise-dialog.html',
+})
+export class EditExerciesDialogComponent {
+
+  constructor(
+    public dialogRef: MatDialogRef<EditExerciesDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { exerciseName: String, exerciseId: number, reps: number, all: Exercise[] }) {
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+}
+
+@Component({
+  selector: 'app-edit-rest-dialog',
+  templateUrl: 'edit-rest-dialog.html',
+})
+export class EditRestDialogComponent {
+
+  constructor(
+    public dialogRef: MatDialogRef<EditRestDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { duration: number }) {
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
 }
 
@@ -54,7 +224,7 @@ interface Workout {
 }
 
 interface Block {
-  components: any[];
+  components: Comp[];
   order: number;
 }
 
