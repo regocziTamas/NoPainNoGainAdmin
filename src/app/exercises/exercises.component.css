@@ -6,6 +6,7 @@
 #container{
   margin-right: 20vw;
   margin-left: 20vw;
+  margin-top: 2vw;
 }
 
 .blockInput{
@@ -32,3 +33,37 @@ html {
 mat-expansion-panel{
   margin-bottom: 10px !important;
 }
+
+#searchInput{
+  color: white
+}
+
+#searchInputField{
+  width: 70%; display: inline-block
+}
+
+#targetSelect{
+  display: inline-block; max-width: 25%; margin-right: 5%
+}
+
+#exercisesHeader{
+  margin-left: 18vw;
+  color: white;
+  display: inline;
+}
+
+#addExerciseButton{
+  float: right;
+  margin-right: 20vw;
+  background-color: #00B0FF;
+  color: white;
+}
+
+.mat-simple-snackbar{
+  background-color: #3f3f3f;
+  color: white;
+}
+
+
+
+

@@ -1,8 +1,16 @@
-<button mat-raised-button (click)="checkAuth()" style="margin-left: 40px; margin-right:10px; margin-bottom: 20px ">Auth Check</button>
-<button mat-raised-button (click)="addExercise()">Add Exercise</button>
+<button mat-raised-button (click)="checkAuth()" style="margin-left: 40px; margin-right:10px; margin-bottom: 20px; display: block ">Auth Check</button>
 
 
+<h1 id="exercisesHeader">Exercises</h1>
+<button mat-raised-button id="addExerciseButton" (click)="addExercise()">Add Exercise</button>
 <div id="container">
+  <mat-select placeholder="Select target" id="targetSelect" #select (valueChange)="onSearchInput(select.value, input.value)">
+    <mat-option value="all">All</mat-option>
+    <mat-option *ngFor="let target of targets" [value]="target" >{{target}}</mat-option>
+  </mat-select>
+  <mat-form-field id="searchInputField">
+    <input type="text" #input matInput placeholder="Search in exercises..."  (input)="onSearchInput(select.value, input.value)" >
+  </mat-form-field>
   <mat-accordion *ngFor="let ex of exercises" >
   <mat-expansion-panel class="exAccordion">
     <mat-expansion-panel-header >

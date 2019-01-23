@@ -29,3 +29,11 @@
 .workoutEntry:hover{
   background-color: #484849;
 }
+
+#searchInput{
+  color: white
+}
+
+#searchInputField{
+  display: block; margin-bottom: 35px
+}

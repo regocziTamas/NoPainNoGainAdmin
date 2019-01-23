@@ -27,6 +27,8 @@
       </mat-card>
     </div>
     <mat-card-actions style="text-align: right">
+      <button mat-raised-button class="cardButton" (click)="moveBlockDown(b.order)" ><i class="material-icons">arrow_downward</i></button>
+      <button mat-raised-button class="cardButton" (click)="moveBlockUp(b.order)" ><i class="material-icons">arrow_upward</i></button>
       <button mat-raised-button class="cardButton" (click)="addNewExercise(b.order)">Add Exercise</button>
       <button mat-raised-button class="cardButton" (click)="addNewRest(b.order)">Add Rest</button>
       <button mat-raised-button class="cardButton" (click)="deleteBlock(b.order)">Delete</button>

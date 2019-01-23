@@ -13,6 +13,7 @@ export class WorkoutsComponent implements OnInit {
 
   http: HttpClient;
   entries: TitleEntry[];
+  unfiltered: TitleEntry[];
   router: Router;
 
   constructor(http: HttpClient, router: Router) {
@@ -26,7 +27,8 @@ export class WorkoutsComponent implements OnInit {
 
   requestWorkoutTitles() {
     this.http.get<TitleEntry[]>(environment.baseurl + '/workouts/names').subscribe(resp => {
-      this.entries = resp;
+      this.unfiltered = resp;
+      this.entries = this.unfiltered.map(e => ({...e}));
       console.log(this.entries);
     });
 
@@ -37,10 +39,14 @@ export class WorkoutsComponent implements OnInit {
   }
 
   addNewWorkout() {
-    this.http.get<{id: number}>(environment.baseurl + '/workouts/add-new').subscribe(resp => {
+    this.http.get<{ id: number }>(environment.baseurl + '/workouts/add-new').subscribe(resp => {
       console.log(resp.id);
       this.router.navigate(['/workout', {id: resp.id}]);
     });
+  }
+
+  onInput(searchValue: string) {
+    this.entries = this.unfiltered.filter(entry => entry.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()));
   }
 
 

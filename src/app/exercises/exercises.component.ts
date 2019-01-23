@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {MatSnackBar} from '@angular/material';
+import {MatSnackBar, MatSnackBarConfig} from '@angular/material';
 import {environment} from '../../environments/environment';
 
 @Component({
@@ -12,12 +12,16 @@ export class ExercisesComponent implements OnInit {
 
   http: HttpClient;
   exercises: Exercise[];
+  unfiltered: Exercise[];
   targets: String[];
   snackBar: MatSnackBar;
+  snackBarConfig: MatSnackBarConfig;
 
   constructor(http: HttpClient, snackBar: MatSnackBar) {
     this.http = http;
     this.snackBar = snackBar;
+    this.snackBarConfig = new MatSnackBarConfig();
+    this.snackBarConfig.panelClass = ['snackBar'];
 
   }
 
@@ -34,7 +38,8 @@ export class ExercisesComponent implements OnInit {
 
   requestExercises() {
     this.http.get<Exercise[]>(environment.baseurl + '/exercises/all').subscribe(resp => {
-      this.exercises = resp;
+      this.unfiltered = resp;
+      this.exercises = this.unfiltered.map(e => ({...e}));
     });
   }
 
@@ -60,14 +65,14 @@ export class ExercisesComponent implements OnInit {
     const ex = this.getExerciseById(id);
 
     this.http.post(environment.baseurl + '/exercises/save', ex).subscribe(resp => {
-      this.snackBar.open('Changes saved successfully!', null, {duration: 2000});
+      this.snackBar.open('Changes saved successfully!', null, {duration: 2000, panelClass: ['snackBar']});
     });
   }
 
   deleteEx(id: number) {
     this.http.delete(environment.baseurl + `/exercises/${id}`).subscribe(resp => {
       console.log(resp);
-      this.snackBar.open('Exercise deleted successfully!', null, {duration: 2000});
+      this.snackBar.open('Exercise deleted successfully!', null, {duration: 2000, panelClass: ['snackBar']});
       this.requestExercises();
     });
   }
@@ -87,7 +92,16 @@ export class ExercisesComponent implements OnInit {
     }
   }
 
-
+  onSearchInput(target: String, search: String) {
+    if (search === undefined) {
+      search = '';
+    }
+    if (target === undefined || target === 'all') {
+      target = '';
+    }
+    this.exercises = this.unfiltered.filter(ex => ex.target.toLocaleLowerCase().includes(target.toLocaleLowerCase())
+      && ex.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+  }
 }
 
 interface Exercise {
