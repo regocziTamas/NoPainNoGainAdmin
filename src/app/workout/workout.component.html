@@ -10,28 +10,28 @@
     <button class="mat-raised-button mainButton" (click)="deleteWorkout()">Delete Workout</button>
     <button class="mat-raised-button mainButton" (click)="saveChanges()">Save</button>
   </div>
-  <mat-card *ngFor="let b of workout.blocks" cdkDropList (cdkDropListDropped)="drop($event, b.order)" class="block">
+  <mat-card *ngFor="let b of workout.blocks" cdkDropList (cdkDropListDropped)="drop($event, b.orderId)" class="block">
     <h2 style="color: white; vertical-align: center">
-      Exercise {{b.order + 1}}
+      Exercise {{b.orderId + 1}}
     </h2>
     <div *ngFor="let ex of b.components" >
-      <mat-card *ngIf="ex.hasOwnProperty('reps')" class="entry" cdkDrag (click)="WExerciseEdit(b.order,ex.order)" >
+      <mat-card *ngIf="ex.hasOwnProperty('reps')" class="entry" cdkDrag (click)="WExerciseEdit(b.orderId,ex.orderId)" >
         <mat-card-content style="height: 40px; vertical-align: middle"  >
             <div class="entryNameCont">{{ex.reps}} reps of {{ex.exercise.name}}</div>
-            <div class="iconCont"><i class="material-icons deleteIcon" (click)="deleteComponent(b.order,ex.order)" > delete </i></div>
+            <div class="iconCont"><i class="material-icons deleteIcon" (click)="deleteComponent(b.orderId,ex.orderId)" > delete </i></div>
         </mat-card-content>
       </mat-card>
-      <mat-card *ngIf="!ex.hasOwnProperty('reps')" class="entry" cdkDrag (click)="WRestEdit(b.order,ex.order)">
+      <mat-card *ngIf="!ex.hasOwnProperty('reps')" class="entry" cdkDrag (click)="WRestEdit(b.orderId,ex.orderId)">
         <mat-card-content class="entryNameCont">{{ex.durationInMilis/1000}} seconds of rest</mat-card-content>
-        <div class="iconCont"><i class="material-icons deleteIcon" (click)="deleteComponent(b.order,ex.order)" > delete </i></div>
+        <div class="iconCont"><i class="material-icons deleteIcon" (click)="deleteComponent(b.orderId,ex.orderId)" > delete </i></div>
       </mat-card>
     </div>
     <mat-card-actions style="text-align: right">
-      <button mat-raised-button class="cardButton" (click)="moveBlockDown(b.order)" ><i class="material-icons">arrow_downward</i></button>
-      <button mat-raised-button class="cardButton" (click)="moveBlockUp(b.order)" ><i class="material-icons">arrow_upward</i></button>
-      <button mat-raised-button class="cardButton" (click)="addNewExercise(b.order)">Add Exercise</button>
-      <button mat-raised-button class="cardButton" (click)="addNewRest(b.order)">Add Rest</button>
-      <button mat-raised-button class="cardButton" (click)="deleteBlock(b.order)">Delete</button>
+      <button mat-raised-button class="cardButton" (click)="moveBlockDown(b.orderId)" ><i class="material-icons">arrow_downward</i></button>
+      <button mat-raised-button class="cardButton" (click)="moveBlockUp(b.orderId)" ><i class="material-icons">arrow_upward</i></button>
+      <button mat-raised-button class="cardButton" (click)="addNewExercise(b.orderId)">Add Exercise</button>
+      <button mat-raised-button class="cardButton" (click)="addNewRest(b.orderId)">Add Rest</button>
+      <button mat-raised-button class="cardButton" (click)="deleteBlock(b.orderId)">Delete</button>
     </mat-card-actions>
 
   </mat-card>

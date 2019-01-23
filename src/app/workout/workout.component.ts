@@ -55,6 +55,7 @@ export class WorkoutComponent implements OnInit, OnDestroy {
         this.router.navigate(['/workouts']);
       }
       this.workout = resp;
+      console.log(resp);
     });
   }
 
@@ -66,13 +67,13 @@ export class WorkoutComponent implements OnInit, OnDestroy {
 
   private reorderBlock(order: number) {
     for (let i = 0; i < this.workout.blocks[order].components.length; i++) {
-      this.workout.blocks[order].components[i].order = i;
+      this.workout.blocks[order].components[i].orderId = i;
     }
   }
 
   private reorderWorkoutBlocks() {
     for (let i = 0; i < this.workout.blocks.length; i++) {
-      this.workout.blocks[i].order = i;
+      this.workout.blocks[i].orderId = i;
     }
   }
 
@@ -109,8 +110,9 @@ export class WorkoutComponent implements OnInit, OnDestroy {
       const exer: WExercise = {
         reps: result.reps,
         exercise: this.findExerciseById(result.exerciseId),
-        order: componentOrder,
-        type: 'WorkoutExercise'
+        orderId: componentOrder,
+        type: 'WorkoutExercise',
+        id: wex.id
       };
       this.workout.blocks[blockOrder].components[componentOrder] = exer;
       this.allSaved = false;
@@ -130,7 +132,7 @@ export class WorkoutComponent implements OnInit, OnDestroy {
         console.log('no changes');
         return;
       }
-      const newRest: Rest = {type: 'Rest', order: componentOrder, durationInMilis: result.duration * 1000};
+      const newRest: Rest = {type: 'Rest', orderId: componentOrder, durationInMilis: result.duration * 1000, id: null};
       this.workout.blocks[blockOrder].components[componentOrder] = newRest;
       this.allSaved = false;
 
@@ -139,7 +141,7 @@ export class WorkoutComponent implements OnInit, OnDestroy {
 
   addNewExercise(blockId: number) {
     const newOrder = this.workout.blocks[blockId].components.length;
-    const ex: WExercise = {reps: 10, exercise: this.findExerciseById(1), type: 'WorkoutExercise', order: newOrder};
+    const ex: WExercise = {reps: 10, exercise: this.findExerciseById(1), type: 'WorkoutExercise', orderId: newOrder, id: null};
     this.workout.blocks[blockId].components.push(ex);
     this.allSaved = false;
     this.WExerciseEdit(blockId, newOrder);
@@ -148,7 +150,7 @@ export class WorkoutComponent implements OnInit, OnDestroy {
 
   addNewRest(blockOrder: number) {
     const newOrder = this.workout.blocks[blockOrder].components.length;
-    const rest: Rest = {type: 'Rest', durationInMilis: 5000, order: newOrder};
+    const rest: Rest = {type: 'Rest', durationInMilis: 5000, orderId: newOrder, id: null};
     this.workout.blocks[blockOrder].components.push(rest);
     this.allSaved = false;
     this.WRestEdit(blockOrder, newOrder);
@@ -156,8 +158,8 @@ export class WorkoutComponent implements OnInit, OnDestroy {
 
   addBlock() {
     const newOrder = this.workout.blocks.length;
-    let compList: Comp[] = [];
-    const block: Block = {order: newOrder, components: compList};
+    const compList: Comp[] = [];
+    const block: Block = {orderId: newOrder, components: compList, id: null};
     this.allSaved = false;
     this.workout.blocks.push(block);
   }
